@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -24,66 +24,27 @@ const Index = () => {
   const [selectedCity, setSelectedCity] = useState('');
   const [favorites, setFavorites] = useState<number[]>([]);
   const [applied, setApplied] = useState<number[]>([]);
+  const [vacancies, setVacancies] = useState<Vacancy[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const vacancies: Vacancy[] = [
-    {
-      id: 1,
-      title: 'Senior Frontend Developer',
-      company: 'Tech Solutions',
-      location: 'Москва',
-      salary: '200 000 - 300 000 ₽',
-      description: 'Разработка современных веб-приложений на React, TypeScript',
-      tags: ['React', 'TypeScript', 'Remote'],
-      isRecommended: true
-    },
-    {
-      id: 2,
-      title: 'UX/UI Designer',
-      company: 'Digital Agency',
-      location: 'Санкт-Петербург',
-      salary: '150 000 - 200 000 ₽',
-      description: 'Проектирование интерфейсов, создание дизайн-систем',
-      tags: ['Figma', 'UI/UX', 'Remote'],
-      isRecommended: true
-    },
-    {
-      id: 3,
-      title: 'Python Backend Developer',
-      company: 'FinTech Inc',
-      location: 'Москва',
-      salary: '180 000 - 250 000 ₽',
-      description: 'Разработка backend микросервисов на Python/Django',
-      tags: ['Python', 'Django', 'PostgreSQL']
-    },
-    {
-      id: 4,
-      title: 'Product Manager',
-      company: 'StartupLab',
-      location: 'Удаленно',
-      salary: '220 000 - 280 000 ₽',
-      description: 'Управление продуктом от идеи до релиза',
-      tags: ['Product', 'Agile', 'Remote'],
-      isRecommended: true
-    },
-    {
-      id: 5,
-      title: 'DevOps Engineer',
-      company: 'Cloud Systems',
-      location: 'Екатеринбург',
-      salary: '190 000 - 240 000 ₽',
-      description: 'Настройка CI/CD, управление инфраструктурой',
-      tags: ['Kubernetes', 'Docker', 'AWS']
-    },
-    {
-      id: 6,
-      title: 'Data Scientist',
-      company: 'AI Analytics',
-      location: 'Новосибирск',
-      salary: '200 000 - 270 000 ₽',
-      description: 'Анализ данных, построение ML-моделей',
-      tags: ['Python', 'ML', 'Data Analysis']
-    }
-  ];
+  useEffect(() => {
+    fetch('https://functions.poehali.dev/c37d9d16-227a-44d0-b385-cb5d560dbffc')
+      .then(res => res.json())
+      .then(data => {
+        const mappedVacancies = data.map((v: any, index: number) => ({
+          ...v,
+          isRecommended: index < 2
+        }));
+        setVacancies(mappedVacancies);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to load vacancies:', err);
+        setLoading(false);
+      });
+  }, []);
+
+
 
   const toggleFavorite = (id: number) => {
     setFavorites(prev => 
@@ -157,7 +118,14 @@ const Index = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-12">
-        {recommendedVacancies.length > 0 && (
+        {loading && (
+          <div className="text-center py-16">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <p className="text-gray-500 mt-4">Загрузка вакансий...</p>
+          </div>
+        )}
+        
+        {!loading && recommendedVacancies.length > 0 && (
           <div className="mb-12">
             <div className="flex items-center gap-2 mb-6">
               <Icon name="Sparkles" size={20} className="text-primary" />
@@ -230,6 +198,7 @@ const Index = () => {
           </div>
         )}
 
+        {!loading && (
         <div>
           <h3 className="text-xl font-semibold text-gray-900 mb-6">Все вакансии</h3>
           <div className="space-y-4">
@@ -290,8 +259,9 @@ const Index = () => {
             ))}
           </div>
         </div>
+        )}
 
-        {filteredVacancies.length === 0 && (
+        {!loading && filteredVacancies.length === 0 && (
           <div className="text-center py-16">
             <Icon name="Search" size={48} className="mx-auto text-gray-300 mb-4" />
             <p className="text-gray-500">Вакансии не найдены</p>

@@ -1,0 +1,19 @@
+{
+  "tests": [
+    {
+      "name": "Get vacancies list",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "0": {
+          "id": "number",
+          "title": "string",
+          "company": "string",
+          "location": "string"
+        }
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

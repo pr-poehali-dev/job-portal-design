@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -29,47 +29,21 @@ const VacancyDetail = () => {
   const navigate = useNavigate();
   const [isFavorite, setIsFavorite] = useState(false);
   const [hasApplied, setHasApplied] = useState(false);
+  const [vacancy, setVacancy] = useState<VacancyDetail | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const vacancy: VacancyDetail = {
-    id: Number(id),
-    title: 'Senior Frontend Developer',
-    company: 'Tech Solutions',
-    location: 'Москва',
-    salary: '200 000 - 300 000 ₽',
-    description: 'Мы ищем опытного Frontend разработчика для работы над крупным проектом в финтех сфере. Вы будете работать с современным стеком технологий и влиять на архитектурные решения.',
-    requirements: [
-      'Опыт коммерческой разработки на React от 3 лет',
-      'Глубокое понимание TypeScript',
-      'Опыт работы с Redux или другими state management решениями',
-      'Знание современных подходов к стилизации (CSS-in-JS, CSS Modules)',
-      'Опыт написания unit и integration тестов',
-      'Понимание принципов REST API и работы с ними',
-      'Знание Git и опыт работы в команде'
-    ],
-    responsibilities: [
-      'Разработка новых функций веб-приложения',
-      'Поддержка и оптимизация существующего кода',
-      'Участие в code review и архитектурных решениях',
-      'Взаимодействие с backend командой и дизайнерами',
-      'Менторство junior разработчиков',
-      'Написание технической документации'
-    ],
-    conditions: [
-      'Гибридный формат работы (офис/удаленка)',
-      'ДМС с первого дня работы',
-      'Оплачиваемое обучение и конференции',
-      '28 дней отпуска',
-      'Компенсация спорта',
-      'Современный офис в центре Москвы',
-      'Возможность влиять на выбор технологий'
-    ],
-    tags: ['React', 'TypeScript', 'Redux', 'Remote'],
-    employmentType: 'Полная занятость',
-    experience: 'От 3 до 6 лет',
-    companyDescription: 'Tech Solutions — лидирующая компания в разработке финтех решений. Мы создаем продукты, которыми пользуются миллионы людей каждый день.',
-    companySize: '200-500 сотрудников',
-    publishedDate: '15 декабря 2024'
-  };
+  useEffect(() => {
+    fetch(`https://functions.poehali.dev/dc4947a9-240d-4227-b897-0daca4cc12e6?id=${id}`)
+      .then(res => res.json())
+      .then(data => {
+        setVacancy(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to load vacancy:', err);
+        setLoading(false);
+      });
+  }, [id]);
 
   const handleApply = () => {
     setHasApplied(true);
@@ -78,6 +52,31 @@ const VacancyDetail = () => {
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <p className="text-gray-500 mt-4">Загрузка вакансии...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!vacancy) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <Icon name="AlertCircle" size={48} className="mx-auto text-gray-300 mb-4" />
+          <p className="text-gray-500">Вакансия не найдена</p>
+          <Button onClick={() => navigate('/')} className="mt-4">
+            Вернуться к списку
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
