@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,6 +19,7 @@ interface Vacancy {
 }
 
 const Index = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const [favorites, setFavorites] = useState<number[]>([]);
@@ -163,7 +165,7 @@ const Index = () => {
             </div>
             <div className="space-y-4">
               {recommendedVacancies.map(vacancy => (
-                <Card key={vacancy.id} className="p-6 hover:shadow-md transition-shadow">
+                <Card key={vacancy.id} className="p-6 hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate(`/vacancy/${vacancy.id}`)}>
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <div className="flex items-start gap-3 mb-2">
@@ -195,7 +197,10 @@ const Index = () => {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => toggleFavorite(vacancy.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFavorite(vacancy.id);
+                        }}
                         className="text-gray-400 hover:text-primary"
                       >
                         <Icon 
@@ -210,7 +215,10 @@ const Index = () => {
                           Откликнулись
                         </Button>
                       ) : (
-                        <Button onClick={() => handleApply(vacancy.id)} className="w-32">
+                        <Button onClick={(e) => {
+                          e.stopPropagation();
+                          handleApply(vacancy.id);
+                        }} className="w-32">
                           Откликнуться
                         </Button>
                       )}
@@ -226,7 +234,7 @@ const Index = () => {
           <h3 className="text-xl font-semibold text-gray-900 mb-6">Все вакансии</h3>
           <div className="space-y-4">
             {otherVacancies.map(vacancy => (
-              <Card key={vacancy.id} className="p-6 hover:shadow-md transition-shadow">
+              <Card key={vacancy.id} className="p-6 hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate(`/vacancy/${vacancy.id}`)}>
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <h4 className="text-lg font-semibold text-gray-900 mb-2">{vacancy.title}</h4>
@@ -251,7 +259,10 @@ const Index = () => {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => toggleFavorite(vacancy.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(vacancy.id);
+                      }}
                       className="text-gray-400 hover:text-primary"
                     >
                       <Icon 
@@ -266,7 +277,10 @@ const Index = () => {
                         Откликнулись
                       </Button>
                     ) : (
-                      <Button onClick={() => handleApply(vacancy.id)} className="w-32">
+                      <Button onClick={(e) => {
+                        e.stopPropagation();
+                        handleApply(vacancy.id);
+                      }} className="w-32">
                         Откликнуться
                       </Button>
                     )}
