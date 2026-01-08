@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -20,6 +21,7 @@ interface Vacancy {
 
 const Index = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const [favorites, setFavorites] = useState<number[]>([]);
@@ -80,12 +82,23 @@ const Index = () => {
             </nav>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="ghost" className="text-sm text-gray-600 hover:text-gray-900">
-              Разместить вакансию
-            </Button>
-            <Button variant="outline" className="text-sm">
-              Войти
-            </Button>
+            {isAuthenticated ? (
+              <>
+                <span className="text-sm text-gray-600">{user?.name}</span>
+                <Button onClick={() => navigate('/dashboard')} className="text-sm">
+                  Личный кабинет
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="ghost" onClick={() => navigate('/register')} className="text-sm text-gray-600 hover:text-gray-900">
+                  Регистрация
+                </Button>
+                <Button variant="outline" onClick={() => navigate('/login')} className="text-sm">
+                  Войти
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </header>
