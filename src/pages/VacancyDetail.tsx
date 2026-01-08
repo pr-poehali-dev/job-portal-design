@@ -83,7 +83,7 @@ const VacancyDetail = () => {
       <header className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-8">
-            <h1 className="text-2xl font-semibold text-gray-900">JobSearch</h1>
+            <h1 className="text-2xl font-semibold text-gray-900 cursor-pointer" onClick={() => navigate('/')}>Воркеры</h1>
             <nav className="hidden md:flex gap-6">
               <a href="#" className="text-gray-600 hover:text-gray-900 text-sm">Вакансии</a>
               <a href="#" className="text-gray-600 hover:text-gray-900 text-sm">Избранное</a>

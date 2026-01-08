@@ -38,7 +38,7 @@ const Login = () => {
               <Icon name="Briefcase" size={32} className="text-white" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Вход в JobSearch</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Вход в Воркеры</h1>
           <p className="text-gray-600">Войдите в свой аккаунт</p>
         </div>
 

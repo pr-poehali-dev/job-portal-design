@@ -41,7 +41,7 @@ const Register = () => {
             </div>
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Регистрация</h1>
-          <p className="text-gray-600">Создайте аккаунт в JobSearch</p>
+          <p className="text-gray-600">Создайте аккаунт в Воркеры</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
