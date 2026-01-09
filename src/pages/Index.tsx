@@ -105,7 +105,7 @@ const Index = () => {
 
       <div className="bg-gray-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-12">
-          <h2 className="text-3xl font-semibold text-gray-900 mb-8">Найдите работу мечты</h2>
+          <h2 className="text-3xl font-semibold text-gray-900 mb-8">ВРЕМЯ РЕАЛЬНО НАЙТИ РАБОТУ!</h2>
           <div className="flex gap-3">
             <div className="flex-1">
               <Input
