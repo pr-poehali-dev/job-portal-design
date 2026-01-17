@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -161,9 +161,11 @@ const Index = () => {
             </nav>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="ghost" onClick={() => navigate('/employer/vacancies')} className="text-sm text-gray-600 hover:text-gray-900">
-              Для работодателей
-            </Button>
+            <Link to="/employer/vacancies">
+              <Button variant="ghost" className="text-sm text-gray-600 hover:text-gray-900">
+                Для работодателей
+              </Button>
+            </Link>
             {isAuthenticated ? (
               <>
                 <span className="text-sm text-gray-600">{user?.name}</span>

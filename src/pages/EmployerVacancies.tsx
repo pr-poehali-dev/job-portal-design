@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -74,14 +74,18 @@ const EmployerVacancies = () => {
             Воркеры
           </h1>
           <div className="flex items-center gap-3">
-            <Button variant="outline" onClick={() => navigate('/')}>
-              <Icon name="Home" size={16} className="mr-2" />
-              На главную
-            </Button>
-            <Button onClick={() => navigate('/employer/create-vacancy')}>
-              <Icon name="Plus" size={16} className="mr-2" />
-              Создать вакансию
-            </Button>
+            <Link to="/">
+              <Button variant="outline">
+                <Icon name="Home" size={16} className="mr-2" />
+                На главную
+              </Button>
+            </Link>
+            <Link to="/employer/create-vacancy">
+              <Button>
+                <Icon name="Plus" size={16} className="mr-2" />
+                Создать вакансию
+              </Button>
+            </Link>
           </div>
         </div>
       </header>

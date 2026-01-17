@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -63,13 +63,17 @@ const CreateVacancy = () => {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-semibold text-gray-900 cursor-pointer" onClick={() => navigate('/')}>
-            Воркеры
-          </h1>
-          <Button variant="outline" onClick={() => navigate('/employer/vacancies')}>
-            <Icon name="ArrowLeft" size={16} className="mr-2" />
-            Мои вакансии
-          </Button>
+          <Link to="/">
+            <h1 className="text-2xl font-semibold text-gray-900 cursor-pointer">
+              Воркеры
+            </h1>
+          </Link>
+          <Link to="/employer/vacancies">
+            <Button variant="outline">
+              <Icon name="ArrowLeft" size={16} className="mr-2" />
+              Мои вакансии
+            </Button>
+          </Link>
         </div>
       </header>
 
@@ -231,9 +235,11 @@ const CreateVacancy = () => {
                 <Icon name="Check" size={18} className="mr-2" />
                 Опубликовать вакансию
               </Button>
-              <Button type="button" variant="outline" onClick={() => navigate('/employer/vacancies')}>
-                Отмена
-              </Button>
+              <Link to="/employer/vacancies">
+                <Button type="button" variant="outline">
+                  Отмена
+                </Button>
+              </Link>
             </div>
           </form>
         </Card>
