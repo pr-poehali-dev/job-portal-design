@@ -77,6 +77,12 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 elif vac['salary_to']:
                     salary = f"до {vac['salary_to']:,} ₽".replace(',', ' ')
                 
+                images = [
+                    'https://cdn.poehali.dev/projects/67b3a977-508a-4e6a-b135-916951979383/files/908cd9c2-2fb1-4827-8c90-49133bc8ae55.jpg',
+                    'https://cdn.poehali.dev/projects/67b3a977-508a-4e6a-b135-916951979383/files/f2b915ff-e0aa-402a-96fb-d6bd91f7eaa6.jpg',
+                    'https://cdn.poehali.dev/projects/67b3a977-508a-4e6a-b135-916951979383/files/338e2128-e5ca-4221-9d74-bd38ef0de21f.jpg'
+                ]
+                
                 result.append({
                     'id': vac['id'],
                     'title': vac['title'],
@@ -92,7 +98,11 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'employmentType': 'Полная занятость' if vac['employment_type'] == 'full_time' else 'Частичная занятость',
                     'companyDescription': vac['company_description'],
                     'companySize': vac['company_size'],
-                    'publishedDate': vac['published_at'].strftime('%d %B %Y') if vac['published_at'] else ''
+                    'publishedDate': vac['published_at'].strftime('%d %B %Y') if vac['published_at'] else '',
+                    'image': images[vac['id'] % len(images)],
+                    'rating': 4 if vac['id'] % 2 == 0 else 5,
+                    'reviews': 42 + (vac['id'] % 30),
+                    'priceFrom': vac['salary_from'] if vac['salary_from'] else 50000
                 })
             
         return {

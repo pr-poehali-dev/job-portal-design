@@ -17,6 +17,10 @@ interface Vacancy {
   tags: string[];
   isRecommended?: boolean;
   isFavorite?: boolean;
+  image?: string;
+  rating?: number;
+  reviews?: number;
+  priceFrom?: number;
 }
 
 const Index = () => {
@@ -144,66 +148,74 @@ const Index = () => {
               <Icon name="Sparkles" size={20} className="text-primary" />
               <h3 className="text-xl font-semibold text-gray-900">Рекомендации для вас</h3>
             </div>
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {recommendedVacancies.map(vacancy => (
-                <Card key={vacancy.id} className="p-6 hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate(`/vacancy/${vacancy.id}`)}>
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <div className="flex items-start gap-3 mb-2">
-                        <h4 className="text-lg font-semibold text-gray-900">{vacancy.title}</h4>
-                        {vacancy.isRecommended && (
-                          <Badge variant="secondary" className="bg-blue-50 text-primary border-0">
-                            Рекомендуем
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-base text-gray-900 font-medium mb-1">{vacancy.company}</p>
-                      <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
-                        <span className="flex items-center gap-1">
-                          <Icon name="MapPin" size={14} />
-                          {vacancy.location}
-                        </span>
-                        <span className="font-medium text-gray-900">{vacancy.salary}</span>
-                      </div>
-                      <p className="text-sm text-gray-600 mb-3">{vacancy.description}</p>
-                      <div className="flex gap-2">
-                        {vacancy.tags.map(tag => (
-                          <Badge key={tag} variant="outline" className="text-xs font-normal text-gray-600">
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
+                <Card key={vacancy.id} className="overflow-hidden hover:shadow-lg transition-all cursor-pointer group" onClick={() => navigate(`/vacancy/${vacancy.id}`)}>
+                  <div className="relative">
+                    <img 
+                      src={vacancy.image || 'https://cdn.poehali.dev/projects/67b3a977-508a-4e6a-b135-916951979383/files/908cd9c2-2fb1-4827-8c90-49133bc8ae55.jpg'} 
+                      alt={vacancy.title}
+                      className="w-full h-48 object-cover"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(vacancy.id);
+                      }}
+                      className="absolute top-3 right-3 bg-white/90 hover:bg-white shadow-sm"
+                    >
+                      <Icon 
+                        name="Heart" 
+                        size={20}
+                        className={favorites.includes(vacancy.id) ? "fill-red-500 text-red-500" : "text-gray-600"}
+                      />
+                    </Button>
+                    {vacancy.isRecommended && (
+                      <Badge className="absolute top-3 left-3 bg-primary text-white border-0">
+                        Топ выбор
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="p-4">
+                    <div className="flex items-center gap-1 mb-2">
+                      {[...Array(5)].map((_, i) => (
+                        <Icon 
+                          key={i} 
+                          name="Star" 
+                          size={14} 
+                          className={i < (vacancy.rating || 4) ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"}
+                        />
+                      ))}
+                      <span className="text-sm text-gray-600 ml-1">({vacancy.reviews || 42})</span>
                     </div>
-                    <div className="flex flex-col gap-2 ml-6">
-                      <Button
-                        variant="ghost"
-                        size="icon"
+                    <h4 className="text-lg font-semibold text-gray-900 mb-1 line-clamp-2">{vacancy.title}</h4>
+                    <p className="text-sm text-gray-600 mb-2">{vacancy.company}</p>
+                    <div className="flex items-center gap-1 text-sm text-gray-500 mb-3">
+                      <Icon name="MapPin" size={14} />
+                      <span>{vacancy.location}</span>
+                    </div>
+                    <div className="flex items-baseline gap-2 mb-4">
+                      <span className="text-2xl font-bold text-gray-900">{vacancy.priceFrom || '50 000'} ₽</span>
+                      <span className="text-sm text-gray-500">/месяц</span>
+                    </div>
+                    {applied.includes(vacancy.id) ? (
+                      <Button disabled className="w-full" variant="outline">
+                        <Icon name="Check" size={16} className="mr-2" />
+                        Откликнулись
+                      </Button>
+                    ) : (
+                      <Button 
                         onClick={(e) => {
                           e.stopPropagation();
-                          toggleFavorite(vacancy.id);
-                        }}
-                        className="text-gray-400 hover:text-primary"
-                      >
-                        <Icon 
-                          name={favorites.includes(vacancy.id) ? "Heart" : "Heart"} 
-                          size={20}
-                          className={favorites.includes(vacancy.id) ? "fill-primary text-primary" : ""}
-                        />
-                      </Button>
-                      {applied.includes(vacancy.id) ? (
-                        <Button disabled className="w-32" variant="outline">
-                          <Icon name="Check" size={16} className="mr-1" />
-                          Откликнулись
-                        </Button>
-                      ) : (
-                        <Button onClick={(e) => {
-                          e.stopPropagation();
                           handleApply(vacancy.id);
-                        }} className="w-32">
-                          Откликнуться
-                        </Button>
-                      )}
-                    </div>
+                        }} 
+                        className="w-full"
+                      >
+                        Откликнуться
+                      </Button>
+                    )}
                   </div>
                 </Card>
               ))}
@@ -214,59 +226,69 @@ const Index = () => {
         {!loading && (
         <div>
           <h3 className="text-xl font-semibold text-gray-900 mb-6">Все вакансии</h3>
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {otherVacancies.map(vacancy => (
-              <Card key={vacancy.id} className="p-6 hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate(`/vacancy/${vacancy.id}`)}>
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">{vacancy.title}</h4>
-                    <p className="text-base text-gray-900 font-medium mb-1">{vacancy.company}</p>
-                    <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
-                      <span className="flex items-center gap-1">
-                        <Icon name="MapPin" size={14} />
-                        {vacancy.location}
-                      </span>
-                      <span className="font-medium text-gray-900">{vacancy.salary}</span>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-3">{vacancy.description}</p>
-                    <div className="flex gap-2">
-                      {vacancy.tags.map(tag => (
-                        <Badge key={tag} variant="outline" className="text-xs font-normal text-gray-600">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
+              <Card key={vacancy.id} className="overflow-hidden hover:shadow-lg transition-all cursor-pointer group" onClick={() => navigate(`/vacancy/${vacancy.id}`)}>
+                <div className="relative">
+                  <img 
+                    src={vacancy.image || 'https://cdn.poehali.dev/projects/67b3a977-508a-4e6a-b135-916951979383/files/908cd9c2-2fb1-4827-8c90-49133bc8ae55.jpg'} 
+                    alt={vacancy.title}
+                    className="w-full h-48 object-cover"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavorite(vacancy.id);
+                    }}
+                    className="absolute top-3 right-3 bg-white/90 hover:bg-white shadow-sm"
+                  >
+                    <Icon 
+                      name="Heart" 
+                      size={20}
+                      className={favorites.includes(vacancy.id) ? "fill-red-500 text-red-500" : "text-gray-600"}
+                    />
+                  </Button>
+                </div>
+                <div className="p-4">
+                  <div className="flex items-center gap-1 mb-2">
+                    {[...Array(5)].map((_, i) => (
+                      <Icon 
+                        key={i} 
+                        name="Star" 
+                        size={14} 
+                        className={i < (vacancy.rating || 4) ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"}
+                      />
+                    ))}
+                    <span className="text-sm text-gray-600 ml-1">({vacancy.reviews || 42})</span>
                   </div>
-                  <div className="flex flex-col gap-2 ml-6">
-                    <Button
-                      variant="ghost"
-                      size="icon"
+                  <h4 className="text-lg font-semibold text-gray-900 mb-1 line-clamp-2">{vacancy.title}</h4>
+                  <p className="text-sm text-gray-600 mb-2">{vacancy.company}</p>
+                  <div className="flex items-center gap-1 text-sm text-gray-500 mb-3">
+                    <Icon name="MapPin" size={14} />
+                    <span>{vacancy.location}</span>
+                  </div>
+                  <div className="flex items-baseline gap-2 mb-4">
+                    <span className="text-2xl font-bold text-gray-900">{vacancy.priceFrom || '50 000'} ₽</span>
+                    <span className="text-sm text-gray-500">/месяц</span>
+                  </div>
+                  {applied.includes(vacancy.id) ? (
+                    <Button disabled className="w-full" variant="outline">
+                      <Icon name="Check" size={16} className="mr-2" />
+                      Откликнулись
+                    </Button>
+                  ) : (
+                    <Button 
                       onClick={(e) => {
                         e.stopPropagation();
-                        toggleFavorite(vacancy.id);
-                      }}
-                      className="text-gray-400 hover:text-primary"
-                    >
-                      <Icon 
-                        name={favorites.includes(vacancy.id) ? "Heart" : "Heart"} 
-                        size={20}
-                        className={favorites.includes(vacancy.id) ? "fill-primary text-primary" : ""}
-                      />
-                    </Button>
-                    {applied.includes(vacancy.id) ? (
-                      <Button disabled className="w-32" variant="outline">
-                        <Icon name="Check" size={16} className="mr-1" />
-                        Откликнулись
-                      </Button>
-                    ) : (
-                      <Button onClick={(e) => {
-                        e.stopPropagation();
                         handleApply(vacancy.id);
-                      }} className="w-32">
-                        Откликнуться
-                      </Button>
-                    )}
-                  </div>
+                      }} 
+                      className="w-full"
+                    >
+                      Откликнуться
+                    </Button>
+                  )}
                 </div>
               </Card>
             ))}
