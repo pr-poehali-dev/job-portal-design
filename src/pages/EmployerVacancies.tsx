@@ -158,69 +158,71 @@ const EmployerVacancies = () => {
           </>
         )}
 
-        {!loading && <div className="space-y-4">
-          {vacancies.map(vacancy => (
-            <Card key={vacancy.id} className="p-6 hover:shadow-md transition-shadow">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-xl font-semibold text-gray-900">{vacancy.title}</h3>
-                    {getStatusBadge(vacancy.status)}
-                  </div>
-                  <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
-                    <span className="flex items-center gap-1">
-                      <Icon name="MapPin" size={14} />
-                      {vacancy.location}
-                    </span>
-                    <span className="font-medium text-gray-900">{vacancy.salary}</span>
-                    <span className="flex items-center gap-1">
-                      <Icon name="Calendar" size={14} />
-                      {vacancy.publishedDate}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-6 text-sm">
-                    <div className="flex items-center gap-2">
-                      <Icon name="Eye" size={16} className="text-gray-400" />
-                      <span className="text-gray-600">{vacancy.views} просмотров</span>
+        {!loading && vacancies.length > 0 && (
+          <div className="space-y-4">
+            {vacancies.map(vacancy => (
+              <Card key={vacancy.id} className="p-6 hover:shadow-md transition-shadow">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h3 className="text-xl font-semibold text-gray-900">{vacancy.title}</h3>
+                      {getStatusBadge(vacancy.status)}
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Icon name="Users" size={16} className="text-gray-400" />
-                      <span className="text-gray-600">{vacancy.applications} откликов</span>
+                    <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
+                      <span className="flex items-center gap-1">
+                        <Icon name="MapPin" size={14} />
+                        {vacancy.location}
+                      </span>
+                      <span className="font-medium text-gray-900">{vacancy.salary}</span>
+                      <span className="flex items-center gap-1">
+                        <Icon name="Calendar" size={14} />
+                        {vacancy.publishedDate}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-6 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Icon name="Eye" size={16} className="text-gray-400" />
+                        <span className="text-gray-600">{vacancy.views} просмотров</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Icon name="Users" size={16} className="text-gray-400" />
+                        <span className="text-gray-600">{vacancy.applications} откликов</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="flex flex-col gap-2 ml-6">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => navigate(`/vacancy/${vacancy.id}`)}
-                  >
-                    <Icon name="Eye" size={16} className="mr-2" />
-                    Просмотр
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => navigate(`/employer/vacancy/${vacancy.id}/edit`)}
-                  >
-                    <Icon name="Pencil" size={16} className="mr-2" />
-                    Редактировать
-                  </Button>
-                  {vacancy.status === 'active' && (
+                  <div className="flex flex-col gap-2 ml-6">
                     <Button 
                       variant="outline" 
                       size="sm"
-                      className="text-red-600 hover:text-red-700"
+                      onClick={() => navigate(`/vacancy/${vacancy.id}`)}
                     >
-                      <Icon name="Archive" size={16} className="mr-2" />
-                      Архивировать
+                      <Icon name="Eye" size={16} className="mr-2" />
+                      Просмотр
                     </Button>
-                  )}
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => navigate(`/employer/vacancy/${vacancy.id}/edit`)}
+                    >
+                      <Icon name="Pencil" size={16} className="mr-2" />
+                      Редактировать
+                    </Button>
+                    {vacancy.status === 'active' && (
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <Icon name="Archive" size={16} className="mr-2" />
+                        Архивировать
+                      </Button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </Card>
-          ))}
-        </div>
+              </Card>
+            ))}
+          </div>
+        )}
 
         {vacancies.length === 0 && !loading && (
           <Card className="p-12 text-center">
@@ -232,8 +234,6 @@ const EmployerVacancies = () => {
               Создать вакансию
             </Button>
           </Card>
-        )}
-        </>
         )}
       </div>
     </div>
