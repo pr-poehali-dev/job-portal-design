@@ -64,7 +64,7 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {isEmployer ? (
             <>
-              <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
+              <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/employer/create-vacancy')}>
                 <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                   <Icon name="Plus" size={24} className="text-primary" />
                 </div>
@@ -72,7 +72,7 @@ const Dashboard = () => {
                 <p className="text-gray-600 text-sm">Опубликуйте новую вакансию для привлечения кандидатов</p>
               </Card>
 
-              <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
+              <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/employer/vacancies')}>
                 <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mb-4">
                   <Icon name="FileText" size={24} className="text-blue-500" />
                 </div>
