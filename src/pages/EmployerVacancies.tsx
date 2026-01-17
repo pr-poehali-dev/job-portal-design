@@ -222,7 +222,7 @@ const EmployerVacancies = () => {
           ))}
         </div>
 
-        {vacancies.length === 0 && (
+        {vacancies.length === 0 && !loading && (
           <Card className="p-12 text-center">
             <Icon name="Briefcase" size={48} className="text-gray-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">У вас пока нет вакансий</h3>
@@ -233,7 +233,8 @@ const EmployerVacancies = () => {
             </Button>
           </Card>
         )}
-        </div>}
+        </>
+        )}
       </div>
     </div>
   );
