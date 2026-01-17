@@ -22,6 +22,10 @@ interface VacancyDetail {
   companyDescription: string;
   companySize: string;
   publishedDate: string;
+  image?: string;
+  rating?: number;
+  reviews?: number;
+  priceFrom?: number;
 }
 
 const VacancyDetail = () => {
@@ -33,14 +37,141 @@ const VacancyDetail = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fallbackVacancies: VacancyDetail[] = [
+      {
+        id: 1,
+        title: "Senior Frontend Developer",
+        company: "Tech Solutions",
+        location: "Москва",
+        salary: "200 000 - 300 000 ₽",
+        description: "Мы ищем опытного Frontend разработчика для работы над крупным проектом в финтех сфере. Вы будете работать с современным стеком технологий и влиять на архитектурные решения.",
+        tags: ["React", "TypeScript", "Redux"],
+        requirements: [
+          "Опыт коммерческой разработки на React от 3 лет",
+          "Глубокое понимание TypeScript",
+          "Опыт работы с Redux или другими state management решениями",
+          "Знание современных подходов к тестированию (Jest, React Testing Library)",
+          "Понимание принципов построения архитектуры фронтенд приложений"
+        ],
+        responsibilities: [
+          "Разработка новых функций веб-приложения",
+          "Оптимизация производительности",
+          "Участие в code review",
+          "Менторинг junior разработчиков",
+          "Проектирование архитектуры новых модулей"
+        ],
+        conditions: [
+          "Официальное оформление по ТК РФ",
+          "Гибкий график работы",
+          "Возможность удаленной работы",
+          "ДМС после испытательного срока",
+          "Корпоративное обучение"
+        ],
+        employmentType: "Полная занятость",
+        experience: "3-6 лет",
+        companyDescription: "Tech Solutions - современная IT компания, специализирующаяся на разработке финансовых решений для крупного бизнеса.",
+        companySize: "100-500 сотрудников",
+        publishedDate: "15 января 2026",
+        image: 'https://cdn.poehali.dev/projects/67b3a977-508a-4e6a-b135-916951979383/files/908cd9c2-2fb1-4827-8c90-49133bc8ae55.jpg',
+        rating: 5,
+        reviews: 48,
+        priceFrom: 200000
+      },
+      {
+        id: 2,
+        title: "UX/UI Designer",
+        company: "Digital Agency",
+        location: "Санкт-Петербург",
+        salary: "150 000 - 200 000 ₽",
+        description: "Ищем креативного дизайнера для работы над крупными проектами. Вы будете отвечать за создание удобных и красивых интерфейсов.",
+        tags: ["Figma", "UI/UX", "Prototyping"],
+        requirements: [
+          "Опыт работы дизайнером от 2 лет",
+          "Отличное владение Figma",
+          "Портфолио с реализованными проектами",
+          "Понимание принципов UX и UI дизайна",
+          "Знание современных трендов в веб-дизайне"
+        ],
+        responsibilities: [
+          "Проектирование пользовательских интерфейсов",
+          "Создание прототипов и wireframes",
+          "Разработка дизайн-систем",
+          "Проведение юзабилити-тестирований",
+          "Взаимодействие с разработчиками"
+        ],
+        conditions: [
+          "Оформление по ТК РФ",
+          "Работа в офисе с возможностью удаленки",
+          "Современное оборудование",
+          "Творческая атмосфера",
+          "Участие в конференциях за счет компании"
+        ],
+        employmentType: "Полная занятость",
+        experience: "1-3 года",
+        companyDescription: "Digital Agency - креативное агентство полного цикла, создающее digital-продукты для крупных брендов.",
+        companySize: "50-100 сотрудников",
+        publishedDate: "14 января 2026",
+        image: 'https://cdn.poehali.dev/projects/67b3a977-508a-4e6a-b135-916951979383/files/f2b915ff-e0aa-402a-96fb-d6bd91f7eaa6.jpg',
+        rating: 4,
+        reviews: 35,
+        priceFrom: 150000
+      },
+      {
+        id: 3,
+        title: "Python Backend Developer",
+        company: "FinTech Inc",
+        location: "Москва",
+        salary: "180 000 - 250 000 ₽",
+        description: "Разрабатываем backend микросервисы для банковских решений. Ищем опытного Python разработчика в команду.",
+        tags: ["Python", "Django", "PostgreSQL"],
+        requirements: [
+          "Опыт разработки на Python от 3 лет",
+          "Знание Django или FastAPI",
+          "Опыт работы с PostgreSQL",
+          "Понимание микросервисной архитектуры",
+          "Опыт работы с Docker и CI/CD"
+        ],
+        responsibilities: [
+          "Разработка и поддержка backend сервисов",
+          "Проектирование API",
+          "Оптимизация баз данных",
+          "Написание тестов",
+          "Участие в code review"
+        ],
+        conditions: [
+          "Официальное трудоустройство",
+          "Гибридный формат работы",
+          "ДМС для сотрудника и семьи",
+          "Современный офис в центре",
+          "Бюджет на обучение"
+        ],
+        employmentType: "Полная занятость",
+        experience: "3-6 лет",
+        companyDescription: "FinTech Inc - инновационная финтех компания, разрабатывающая решения для банковской сферы.",
+        companySize: "200-500 сотрудников",
+        publishedDate: "13 января 2026",
+        image: 'https://cdn.poehali.dev/projects/67b3a977-508a-4e6a-b135-916951979383/files/338e2128-e5ca-4221-9d74-bd38ef0de21f.jpg',
+        rating: 5,
+        reviews: 52,
+        priceFrom: 180000
+      }
+    ];
+
     fetch(`https://functions.poehali.dev/dc4947a9-240d-4227-b897-0daca4cc12e6?id=${id}`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Backend unavailable');
+        return res.json();
+      })
       .then(data => {
         setVacancy(data);
         setLoading(false);
       })
       .catch(err => {
-        console.error('Failed to load vacancy:', err);
+        console.error('Failed to load vacancy, using fallback:', err);
+        const vacancyData = fallbackVacancies.find(v => v.id === parseInt(id || '0'));
+        if (vacancyData) {
+          setVacancy(vacancyData);
+        }
         setLoading(false);
       });
   }, [id]);

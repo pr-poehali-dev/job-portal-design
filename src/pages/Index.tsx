@@ -301,11 +301,11 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {recommendedVacancies.map(vacancy => (
                 <Card key={vacancy.id} className="overflow-hidden hover:shadow-lg transition-all cursor-pointer group" onClick={() => navigate(`/vacancy/${vacancy.id}`)}>
-                  <div className="relative">
+                  <div className="relative aspect-[4/3] overflow-hidden">
                     <img 
                       src={vacancy.image || 'https://cdn.poehali.dev/projects/67b3a977-508a-4e6a-b135-916951979383/files/908cd9c2-2fb1-4827-8c90-49133bc8ae55.jpg'} 
                       alt={vacancy.title}
-                      className="w-full h-48 object-cover"
+                      className="w-full h-full object-cover"
                     />
                     <Button
                       variant="ghost"
@@ -388,11 +388,11 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {otherVacancies.map(vacancy => (
               <Card key={vacancy.id} className="overflow-hidden hover:shadow-lg transition-all cursor-pointer group" onClick={() => navigate(`/vacancy/${vacancy.id}`)}>
-                <div className="relative">
+                <div className="relative aspect-[4/3] overflow-hidden">
                   <img 
                     src={vacancy.image || 'https://cdn.poehali.dev/projects/67b3a977-508a-4e6a-b135-916951979383/files/908cd9c2-2fb1-4827-8c90-49133bc8ae55.jpg'} 
                     alt={vacancy.title}
-                    className="w-full h-48 object-cover"
+                    className="w-full h-full object-cover"
                   />
                   <Button
                     variant="ghost"
