@@ -161,6 +161,9 @@ const Index = () => {
             </nav>
           </div>
           <div className="flex items-center gap-3">
+            <Button variant="ghost" onClick={() => navigate('/employer/vacancies')} className="text-sm text-gray-600 hover:text-gray-900">
+              Для работодателей
+            </Button>
             {isAuthenticated ? (
               <>
                 <span className="text-sm text-gray-600">{user?.name}</span>
@@ -298,7 +301,7 @@ const Index = () => {
               <Icon name="Sparkles" size={20} className="text-primary" />
               <h3 className="text-xl font-semibold text-gray-900">Рекомендации для вас</h3>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {recommendedVacancies.map(vacancy => (
                 <Card key={vacancy.id} className="overflow-hidden hover:shadow-lg transition-all cursor-pointer group" onClick={() => navigate(`/vacancy/${vacancy.id}`)}>
                   <div className="relative aspect-[4/3] overflow-hidden">
@@ -314,45 +317,45 @@ const Index = () => {
                         e.stopPropagation();
                         toggleFavorite(vacancy.id);
                       }}
-                      className="absolute top-3 right-3 bg-white/90 hover:bg-white shadow-sm"
+                      className="absolute top-2 right-2 bg-white/90 hover:bg-white shadow-sm w-8 h-8 p-0"
                     >
                       <Icon 
                         name="Heart" 
-                        size={20}
+                        size={16}
                         className={favorites.includes(vacancy.id) ? "fill-red-500 text-red-500" : "text-gray-600"}
                       />
                     </Button>
                     {vacancy.isRecommended && (
-                      <Badge className="absolute top-3 left-3 bg-primary text-white border-0">
+                      <Badge className="absolute top-2 left-2 bg-primary text-white border-0 text-xs px-2 py-0.5">
                         Топ выбор
                       </Badge>
                     )}
                   </div>
-                  <div className="p-4">
-                    <div className="flex items-center gap-1 mb-2">
+                  <div className="p-3">
+                    <div className="flex items-center gap-0.5 mb-1.5">
                       {[...Array(5)].map((_, i) => (
                         <Icon 
                           key={i} 
                           name="Star" 
-                          size={14} 
+                          size={11} 
                           className={i < (vacancy.rating || 4) ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"}
                         />
                       ))}
-                      <span className="text-sm text-gray-600 ml-1">({vacancy.reviews || 42})</span>
+                      <span className="text-xs text-gray-500 ml-1">({vacancy.reviews || 42})</span>
                     </div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-1 line-clamp-2">{vacancy.title}</h4>
-                    <p className="text-sm text-gray-600 mb-2">{vacancy.company}</p>
-                    <div className="flex items-center gap-1 text-sm text-gray-500 mb-3">
-                      <Icon name="MapPin" size={14} />
+                    <h4 className="text-sm font-semibold text-gray-900 mb-0.5 line-clamp-2">{vacancy.title}</h4>
+                    <p className="text-xs text-gray-500 mb-1.5">{vacancy.company}</p>
+                    <div className="flex items-center gap-0.5 text-xs text-gray-500 mb-2">
+                      <Icon name="MapPin" size={11} />
                       <span>{vacancy.location}</span>
                     </div>
-                    <div className="flex items-baseline gap-2 mb-4">
-                      <span className="text-2xl font-bold text-gray-900">{vacancy.priceFrom || '50 000'} ₽</span>
-                      <span className="text-sm text-gray-500">/месяц</span>
+                    <div className="flex items-baseline gap-1 mb-3">
+                      <span className="text-lg font-bold text-gray-900">{vacancy.priceFrom || '50 000'} ₽</span>
+                      <span className="text-xs text-gray-500">/мес</span>
                     </div>
                     {applied.includes(vacancy.id) ? (
-                      <Button disabled className="w-full" variant="outline">
-                        <Icon name="Check" size={16} className="mr-2" />
+                      <Button disabled className="w-full h-8 text-xs" variant="outline">
+                        <Icon name="Check" size={14} className="mr-1" />
                         Откликнулись
                       </Button>
                     ) : (
@@ -361,7 +364,7 @@ const Index = () => {
                           e.stopPropagation();
                           handleApply(vacancy.id);
                         }} 
-                        className="w-full"
+                        className="w-full h-8 text-xs"
                       >
                         Откликнуться
                       </Button>
@@ -385,7 +388,7 @@ const Index = () => {
         {!loading && otherVacancies.length > 0 && (
         <div>
           <h3 className="text-xl font-semibold text-gray-900 mb-6">Все вакансии</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {otherVacancies.map(vacancy => (
               <Card key={vacancy.id} className="overflow-hidden hover:shadow-lg transition-all cursor-pointer group" onClick={() => navigate(`/vacancy/${vacancy.id}`)}>
                 <div className="relative aspect-[4/3] overflow-hidden">
@@ -401,40 +404,40 @@ const Index = () => {
                       e.stopPropagation();
                       toggleFavorite(vacancy.id);
                     }}
-                    className="absolute top-3 right-3 bg-white/90 hover:bg-white shadow-sm"
+                    className="absolute top-2 right-2 bg-white/90 hover:bg-white shadow-sm w-8 h-8 p-0"
                   >
                     <Icon 
                       name="Heart" 
-                      size={20}
+                      size={16}
                       className={favorites.includes(vacancy.id) ? "fill-red-500 text-red-500" : "text-gray-600"}
                     />
                   </Button>
                 </div>
-                <div className="p-4">
-                  <div className="flex items-center gap-1 mb-2">
+                <div className="p-3">
+                  <div className="flex items-center gap-0.5 mb-1.5">
                     {[...Array(5)].map((_, i) => (
                       <Icon 
                         key={i} 
                         name="Star" 
-                        size={14} 
+                        size={11} 
                         className={i < (vacancy.rating || 4) ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"}
                       />
                     ))}
-                    <span className="text-sm text-gray-600 ml-1">({vacancy.reviews || 42})</span>
+                    <span className="text-xs text-gray-500 ml-1">({vacancy.reviews || 42})</span>
                   </div>
-                  <h4 className="text-lg font-semibold text-gray-900 mb-1 line-clamp-2">{vacancy.title}</h4>
-                  <p className="text-sm text-gray-600 mb-2">{vacancy.company}</p>
-                  <div className="flex items-center gap-1 text-sm text-gray-500 mb-3">
-                    <Icon name="MapPin" size={14} />
+                  <h4 className="text-sm font-semibold text-gray-900 mb-0.5 line-clamp-2">{vacancy.title}</h4>
+                  <p className="text-xs text-gray-500 mb-1.5">{vacancy.company}</p>
+                  <div className="flex items-center gap-0.5 text-xs text-gray-500 mb-2">
+                    <Icon name="MapPin" size={11} />
                     <span>{vacancy.location}</span>
                   </div>
-                  <div className="flex items-baseline gap-2 mb-4">
-                    <span className="text-2xl font-bold text-gray-900">{vacancy.priceFrom || '50 000'} ₽</span>
-                    <span className="text-sm text-gray-500">/месяц</span>
+                  <div className="flex items-baseline gap-1 mb-3">
+                    <span className="text-lg font-bold text-gray-900">{vacancy.priceFrom || '50 000'} ₽</span>
+                    <span className="text-xs text-gray-500">/мес</span>
                   </div>
                   {applied.includes(vacancy.id) ? (
-                    <Button disabled className="w-full" variant="outline">
-                      <Icon name="Check" size={16} className="mr-2" />
+                    <Button disabled className="w-full h-8 text-xs" variant="outline">
+                      <Icon name="Check" size={14} className="mr-1" />
                       Откликнулись
                     </Button>
                   ) : (
@@ -443,7 +446,7 @@ const Index = () => {
                         e.stopPropagation();
                         handleApply(vacancy.id);
                       }} 
-                      className="w-full"
+                      className="w-full h-8 text-xs"
                     >
                       Откликнуться
                     </Button>
