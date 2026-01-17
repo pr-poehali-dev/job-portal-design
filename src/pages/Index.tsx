@@ -39,7 +39,10 @@ const Index = () => {
 
   useEffect(() => {
     fetch('https://functions.poehali.dev/c37d9d16-227a-44d0-b385-cb5d560dbffc')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Backend unavailable');
+        return res.json();
+      })
       .then(data => {
         const mappedVacancies = data.map((v: any, index: number) => ({
           ...v,
@@ -49,7 +52,52 @@ const Index = () => {
         setLoading(false);
       })
       .catch(err => {
-        console.error('Failed to load vacancies:', err);
+        console.error('Failed to load vacancies, using fallback data:', err);
+        const fallbackData: Vacancy[] = [
+          {
+            id: 1,
+            title: "Senior Frontend Developer",
+            company: "Tech Solutions",
+            location: "Москва",
+            salary: "200 000 - 300 000 ₽",
+            description: "Мы ищем опытного Frontend разработчика для работы над крупным проектом в финтех сфере. Вы будете работать с современным стеком технологий и влиять на архитектурные решения.",
+            tags: ["React", "TypeScript", "Redux"],
+            isRecommended: true,
+            image: 'https://cdn.poehali.dev/projects/67b3a977-508a-4e6a-b135-916951979383/files/908cd9c2-2fb1-4827-8c90-49133bc8ae55.jpg',
+            rating: 5,
+            reviews: 48,
+            priceFrom: 200000
+          },
+          {
+            id: 2,
+            title: "UX/UI Designer",
+            company: "Digital Agency",
+            location: "Санкт-Петербург",
+            salary: "150 000 - 200 000 ₽",
+            description: "Ищем креативного дизайнера для работы над крупными проектами. Вы будете отвечать за создание удобных и красивых интерфейсов.",
+            tags: ["Figma", "UI/UX", "Prototyping"],
+            isRecommended: true,
+            image: 'https://cdn.poehali.dev/projects/67b3a977-508a-4e6a-b135-916951979383/files/f2b915ff-e0aa-402a-96fb-d6bd91f7eaa6.jpg',
+            rating: 4,
+            reviews: 35,
+            priceFrom: 150000
+          },
+          {
+            id: 3,
+            title: "Python Backend Developer",
+            company: "FinTech Inc",
+            location: "Москва",
+            salary: "180 000 - 250 000 ₽",
+            description: "Разрабатываем backend микросервисы для банковских решений. Ищем опытного Python разработчика в команду.",
+            tags: ["Python", "Django", "PostgreSQL"],
+            isRecommended: false,
+            image: 'https://cdn.poehali.dev/projects/67b3a977-508a-4e6a-b135-916951979383/files/338e2128-e5ca-4221-9d74-bd38ef0de21f.jpg',
+            rating: 5,
+            reviews: 52,
+            priceFrom: 180000
+          }
+        ];
+        setVacancies(fallbackData);
         setLoading(false);
       });
   }, []);
