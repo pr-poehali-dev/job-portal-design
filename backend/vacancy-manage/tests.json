@@ -1,0 +1,29 @@
+{
+  "tests": [
+    {
+      "name": "Create vacancy",
+      "method": "POST",
+      "body": {
+        "employer_id": 1,
+        "title": "Test Developer",
+        "description": "Test job",
+        "city": "Moscow",
+        "salary_from": 100000,
+        "salary_to": 150000
+      },
+      "expectedStatus": 201,
+      "expectedBody": {
+        "id": "number",
+        "message": "string"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get employer vacancies",
+      "method": "GET",
+      "path": "/?employer_id=1",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    }
+  ]
+}

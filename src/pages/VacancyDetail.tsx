@@ -37,6 +37,25 @@ const VacancyDetail = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Регистрируем просмотр вакансии
+    const registerView = async () => {
+      try {
+        await fetch('https://functions.poehali.dev/7b2d0866-f828-4657-bcd4-6e81a9db3602', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            vacancy_id: parseInt(id || '0'),
+            user_id: null,
+            employer_id: null
+          })
+        });
+      } catch (error) {
+        console.error('Failed to register view:', error);
+      }
+    };
+
+    registerView();
+
     const fallbackVacancies: VacancyDetail[] = [
       {
         id: 1,

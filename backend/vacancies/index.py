@@ -56,8 +56,10 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     v.experience_level as experience,
                     v.employment_type,
                     v.published_at,
+                    v.image_url,
                     e.company_description,
-                    e.company_size
+                    e.company_size,
+                    (SELECT COUNT(DISTINCT ip_address) FROM vacancy_views WHERE vacancy_id = v.id) as views_count
                 FROM vacancies v
                 JOIN employers e ON v.employer_id = e.id
                 WHERE v.is_active = true
@@ -99,9 +101,9 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'companyDescription': vac['company_description'],
                     'companySize': vac['company_size'],
                     'publishedDate': vac['published_at'].strftime('%d %B %Y') if vac['published_at'] else '',
-                    'image': images[vac['id'] % len(images)],
+                    'image': vac['image_url'] or images[vac['id'] % len(images)],
                     'rating': 4 if vac['id'] % 2 == 0 else 5,
-                    'reviews': 42 + (vac['id'] % 30),
+                    'reviews': vac['views_count'] if vac['views_count'] else 0,
                     'priceFrom': vac['salary_from'] if vac['salary_from'] else 50000
                 })
             

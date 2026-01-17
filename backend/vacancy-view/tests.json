@@ -1,0 +1,17 @@
+{
+  "tests": [
+    {
+      "name": "Register vacancy view",
+      "method": "POST",
+      "body": {
+        "vacancy_id": 1,
+        "user_id": null
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "views_count": "number"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

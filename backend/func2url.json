@@ -1,4 +1,6 @@
 {
+  "vacancy-view": "https://functions.poehali.dev/7b2d0866-f828-4657-bcd4-6e81a9db3602",
+  "vacancy-manage": "https://functions.poehali.dev/91a5be6f-4645-488b-b001-07c6502a8dd7",
   "auth": "https://functions.poehali.dev/ddc42650-7564-4462-88f4-f4797fd75a36",
   "vacancies": "https://functions.poehali.dev/c37d9d16-227a-44d0-b385-cb5d560dbffc"
 }

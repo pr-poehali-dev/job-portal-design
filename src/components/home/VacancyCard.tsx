@@ -61,16 +61,9 @@ const VacancyCard = ({ vacancy, isFavorite, isApplied, onToggleFavorite, onApply
         )}
       </div>
       <div className="p-3">
-        <div className="flex items-center gap-0.5 mb-1.5">
-          {[...Array(5)].map((_, i) => (
-            <Icon 
-              key={i} 
-              name="Star" 
-              size={11} 
-              className={i < (vacancy.rating || 4) ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"}
-            />
-          ))}
-          <span className="text-xs text-gray-500 ml-1">({vacancy.reviews || 42})</span>
+        <div className="flex items-center gap-1 mb-1.5">
+          <Icon name="Eye" size={11} className="text-gray-400" />
+          <span className="text-xs text-gray-500">{vacancy.reviews || 0} просмотров</span>
         </div>
         <h4 className="text-sm font-semibold text-gray-900 mb-0.5 line-clamp-2">{vacancy.title}</h4>
         <p className="text-xs text-gray-500 mb-1.5">{vacancy.company}</p>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -18,38 +18,45 @@ interface Vacancy {
 
 const EmployerVacancies = () => {
   const navigate = useNavigate();
-  const [vacancies] = useState<Vacancy[]>([
-    {
-      id: 1,
-      title: 'Senior Frontend Developer',
-      location: 'Москва',
-      salary: '200 000 - 300 000 ₽',
-      status: 'active',
-      views: 234,
-      applications: 12,
-      publishedDate: '15 января 2026'
-    },
-    {
-      id: 2,
-      title: 'UX/UI Designer',
-      location: 'Санкт-Петербург',
-      salary: '150 000 - 200 000 ₽',
-      status: 'active',
-      views: 187,
-      applications: 8,
-      publishedDate: '14 января 2026'
-    },
-    {
-      id: 3,
-      title: 'Python Backend Developer',
-      location: 'Москва',
-      salary: '180 000 - 250 000 ₽',
-      status: 'moderation',
-      views: 0,
-      applications: 0,
-      publishedDate: '17 января 2026'
-    }
-  ]);
+  const [vacancies, setVacancies] = useState<Vacancy[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchVacancies = async () => {
+      try {
+        const response = await fetch('https://functions.poehali.dev/91a5be6f-4645-488b-b001-07c6502a8dd7?employer_id=1');
+        if (!response.ok) throw new Error('Failed to fetch');
+        
+        const data = await response.json();
+        const mappedVacancies = data.map((v: any) => ({
+          id: v.id,
+          title: v.title,
+          location: v.city,
+          salary: v.salary_from && v.salary_to 
+            ? `${v.salary_from.toLocaleString()} - ${v.salary_to.toLocaleString()} ₽`
+            : v.salary_from 
+            ? `от ${v.salary_from.toLocaleString()} ₽`
+            : 'По договорённости',
+          status: v.status || 'active',
+          views: v.views_count || 0,
+          applications: v.applications_count || 0,
+          publishedDate: new Date(v.created_at).toLocaleDateString('ru-RU', { 
+            day: 'numeric', 
+            month: 'long', 
+            year: 'numeric' 
+          })
+        }));
+        
+        setVacancies(mappedVacancies);
+      } catch (error) {
+        console.error('Failed to load vacancies:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVacancies();
+  }, []);
 
   const getStatusBadge = (status: string) => {
     const statusMap = {
@@ -98,51 +105,60 @@ const EmployerVacancies = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <Card className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                <Icon name="Briefcase" size={24} className="text-primary" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Активных вакансий</p>
-                <p className="text-2xl font-semibold text-gray-900">
-                  {vacancies.filter(v => v.status === 'active').length}
-                </p>
-              </div>
-            </div>
-          </Card>
+        {loading ? (
+          <div className="text-center py-16">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <p className="text-gray-500 mt-4">Загрузка...</p>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+              <Card className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <Icon name="Briefcase" size={24} className="text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Активных вакансий</p>
+                    <p className="text-2xl font-semibold text-gray-900">
+                      {vacancies.filter(v => v.status === 'active').length}
+                    </p>
+                  </div>
+                </div>
+              </Card>
 
-          <Card className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center">
-                <Icon name="Eye" size={24} className="text-blue-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Всего просмотров</p>
-                <p className="text-2xl font-semibold text-gray-900">
-                  {vacancies.reduce((sum, v) => sum + v.views, 0)}
-                </p>
-              </div>
-            </div>
-          </Card>
+              <Card className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center">
+                    <Icon name="Eye" size={24} className="text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Всего просмотров</p>
+                    <p className="text-2xl font-semibold text-gray-900">
+                      {vacancies.reduce((sum, v) => sum + v.views, 0)}
+                    </p>
+                  </div>
+                </div>
+              </Card>
 
-          <Card className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center">
-                <Icon name="Users" size={24} className="text-green-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Всего откликов</p>
-                <p className="text-2xl font-semibold text-gray-900">
-                  {vacancies.reduce((sum, v) => sum + v.applications, 0)}
-                </p>
-              </div>
+              <Card className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center">
+                    <Icon name="Users" size={24} className="text-green-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Всего откликов</p>
+                    <p className="text-2xl font-semibold text-gray-900">
+                      {vacancies.reduce((sum, v) => sum + v.applications, 0)}
+                    </p>
+                  </div>
+                </div>
+              </Card>
             </div>
-          </Card>
-        </div>
+          </>
+        )}
 
-        <div className="space-y-4">
+        {!loading && <div className="space-y-4">
           {vacancies.map(vacancy => (
             <Card key={vacancy.id} className="p-6 hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between">
@@ -217,6 +233,7 @@ const EmployerVacancies = () => {
             </Button>
           </Card>
         )}
+        </div>}
       </div>
     </div>
   );

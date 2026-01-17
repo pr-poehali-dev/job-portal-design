@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -8,9 +8,12 @@ import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
 
-const CreateVacancy = () => {
+const EditVacancy = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     city: '',
@@ -25,7 +28,41 @@ const CreateVacancy = () => {
   });
   const [skills, setSkills] = useState<string[]>([]);
   const [currentSkill, setCurrentSkill] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchVacancy = async () => {
+      try {
+        const response = await fetch(`https://functions.poehali.dev/91a5be6f-4645-488b-b001-07c6502a8dd7?vacancy_id=${id}`);
+        if (!response.ok) throw new Error('Failed to fetch');
+        
+        const data = await response.json();
+        setFormData({
+          title: data.title || '',
+          city: data.city || '',
+          salaryFrom: data.salary_from?.toString() || '',
+          salaryTo: data.salary_to?.toString() || '',
+          description: data.description || '',
+          requirements: Array.isArray(data.requirements) ? data.requirements.join('\n') : '',
+          responsibilities: Array.isArray(data.responsibilities) ? data.responsibilities.join('\n') : '',
+          conditions: Array.isArray(data.conditions) ? data.conditions.join('\n') : '',
+          experience: data.experience_level || '',
+          employmentType: data.employment_type || 'full_time'
+        });
+        setSkills(Array.isArray(data.skills) ? data.skills : []);
+      } catch (error) {
+        toast({
+          title: 'Ошибка',
+          description: 'Не удалось загрузить вакансию',
+          variant: 'destructive'
+        });
+        navigate('/employer/vacancies');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVacancy();
+  }, [id, navigate, toast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,13 +76,14 @@ const CreateVacancy = () => {
       return;
     }
 
-    setIsLoading(true);
+    setIsSubmitting(true);
 
     try {
       const response = await fetch('https://functions.poehali.dev/91a5be6f-4645-488b-b001-07c6502a8dd7', {
-        method: 'POST',
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          id: parseInt(id || '0'),
           employer_id: 1,
           title: formData.title,
           city: formData.city,
@@ -61,11 +99,11 @@ const CreateVacancy = () => {
         })
       });
 
-      if (!response.ok) throw new Error('Failed to create vacancy');
+      if (!response.ok) throw new Error('Failed to update vacancy');
 
       toast({
         title: 'Успешно!',
-        description: 'Вакансия создана'
+        description: 'Вакансия обновлена'
       });
 
       setTimeout(() => {
@@ -74,11 +112,11 @@ const CreateVacancy = () => {
     } catch (error) {
       toast({
         title: 'Ошибка',
-        description: 'Не удалось создать вакансию',
+        description: 'Не удалось обновить вакансию',
         variant: 'destructive'
       });
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -92,6 +130,17 @@ const CreateVacancy = () => {
   const removeSkill = (skill: string) => {
     setSkills(skills.filter(s => s !== skill));
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <p className="text-gray-500 mt-4">Загрузка...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -113,7 +162,7 @@ const CreateVacancy = () => {
 
       <div className="max-w-4xl mx-auto px-4 py-8">
         <Card className="p-8">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-6">Создание вакансии</h2>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6">Редактирование вакансии</h2>
           
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -265,9 +314,9 @@ const CreateVacancy = () => {
             </div>
 
             <div className="flex gap-4 pt-4">
-              <Button type="submit" className="flex-1" disabled={isLoading}>
+              <Button type="submit" className="flex-1" disabled={isSubmitting}>
                 <Icon name="Check" size={18} className="mr-2" />
-                {isLoading ? 'Создание...' : 'Опубликовать вакансию'}
+                {isSubmitting ? 'Сохранение...' : 'Сохранить изменения'}
               </Button>
               <Link to="/employer/vacancies">
                 <Button type="button" variant="outline">
@@ -282,4 +331,4 @@ const CreateVacancy = () => {
   );
 };
 
-export default CreateVacancy;
+export default EditVacancy;

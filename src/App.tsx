@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import CreateVacancy from "./pages/CreateVacancy";
+import EditVacancy from "./pages/EditVacancy";
 import EmployerVacancies from "./pages/EmployerVacancies";
 import NotFound from "./pages/NotFound";
 
@@ -48,6 +49,7 @@ const App = () => (
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/employer/vacancies" element={<EmployerVacancies />} />
             <Route path="/employer/create-vacancy" element={<CreateVacancy />} />
+            <Route path="/employer/vacancy/:id/edit" element={<EditVacancy />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
